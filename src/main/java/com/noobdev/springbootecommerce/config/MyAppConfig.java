@@ -3,18 +3,26 @@ package com.noobdev.springbootecommerce.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@EnableWebMvc
 public class MyAppConfig implements WebMvcConfigurer {
-  @Value("${allowed.origins}")
-  private String[] allowedOrigins;
+//  @Value("${allowed.origins}")
+//  private String[] allowedOrigins;
 
   @Value("${spring.data.rest.base-path}")
   private String basePath;
 
   @Override
   public void addCorsMappings(CorsRegistry cors) {
-    cors.addMapping(basePath + "/**").allowedOrigins(allowedOrigins);
+//    cors.addMapping(basePath + "/**").allowedOrigins(allowedOrigins);
+    cors.addMapping(basePath + "/**")
+        .allowedOrigins("*")
+        .allowedMethods("*")
+        .allowedHeaders("*")
+        .exposedHeaders("*");
+//        .allowCredentials(true).maxAge(3600);
   }
 }

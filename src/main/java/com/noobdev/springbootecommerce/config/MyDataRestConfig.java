@@ -19,8 +19,8 @@ import java.util.Set;
 
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
-    @Value("${allowed.origins}")
-    private String[] allowedOrigins;
+//    @Value("${allowed.origins}")
+//    private String[] allowedOrigins;
 
 
     private EntityManager entityManager;
@@ -33,23 +33,16 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH};
 
-        // disable PUT, POST, DELETE Http methods for Product
-//        config.getExposureConfiguration()
-//                .forDomainType(Product.class)
-//                .withItemExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
-//                .withCollectionExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)));
-//
-//        // disable PUT, POST, DELETE Http methods for ProductCategory
-//        config.getExposureConfiguration()
-//                .forDomainType(ProductCategory.class)
-//                .withItemExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)))
-//                .withCollectionExposure(((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions)));
-
         // call an internal method to expose id
         exposeIds(config);
 
         // config cors mapping
-        cors.addMapping(config.getBasePath() + "/**").allowedOrigins(allowedOrigins);
+        cors.addMapping(config.getBasePath() + "/**")
+            .allowedOrigins("*")
+            .allowedMethods("*")
+            .allowedHeaders("*")
+            .exposedHeaders("*");
+//            .allowCredentials(true).maxAge(3600);
 
         // disable HTTP methods for ProductCategory
         disableHttpMethods(ProductCategory.class, config, theUnsupportedActions);

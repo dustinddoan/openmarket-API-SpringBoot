@@ -10,7 +10,10 @@ import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -23,13 +26,22 @@ public class SecurityConfig {
   private String issuer;
 
   @Bean
+  CorsFilter corsFilter() {
+    CorsFilter corsFilter = new CorsFilter();
+    return corsFilter;
+  }
+
+  @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests()
+
+    http.addFilterBefore(corsFilter(), SessionManagementFilter.class)
+        .csrf().disable()
+        .authorizeHttpRequests()
         .requestMatchers("/api/products/**").permitAll()
         .requestMatchers("/api/product-category").permitAll()
         .requestMatchers("/api/orders/**").permitAll()
         .requestMatchers("/api/checkout/**").permitAll()
-        .and().csrf().disable().oauth2ResourceServer().jwt();
+        .and().oauth2ResourceServer().jwt();
 
     return http.build();
   }

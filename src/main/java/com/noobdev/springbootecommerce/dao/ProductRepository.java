@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 // To create finder methods for the entity class field name, we need to create a method starting with findBy
 // followed by field name. We can also apply Containing on the field names to filter the records that match
 // the given text.
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RepositoryRestResource
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByCategoryId(@Param("id") Long id, Pageable pageable);
